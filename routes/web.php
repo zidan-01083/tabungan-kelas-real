@@ -1,24 +1,31 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\DepositController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Login/Register manual (simple demo)
+Route::view('/', 'auth.login')->name('login');
+
+// Register routes
+Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [RegisterController::class, 'register']);
+
+
+// Login routes
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->name('dashboard');
+})->middleware('auth')->name('dashboard');
 
-Route::get('/', function () {
-    return view('landing');
-});
+// Anggota Kelas
+Route::get('/students', [StudentController::class, 'index'])->name('students.index');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-require __DIR__.'/auth.php';
+// Setoran Tabungan
+Route::get('/students/{id}/deposit', [DepositController::class, 'create'])->name('deposit.create');
+Route::post('/students/{id}/deposit', [DepositController::class, 'store'])->name('deposit.store');
