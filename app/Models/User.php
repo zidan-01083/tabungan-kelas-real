@@ -10,38 +10,24 @@ class User extends Authenticatable
     use Notifiable;
 
     protected $fillable = [
-        'name', 'email', 'password', 'role',
+        'nama_siswa',
+        'kelas_siswa',
+        'email',
+        'password',
+        'role',
     ];
 
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
     ];
 
-    // Relasi one-to-one ke Student
-    public function student()
+    public function transaksi()
     {
-        return $this->hasOne(Student::class);
+        return $this->hasMany(Transaksi::class);
     }
 
-    // Helper role check
-    public function isAdmin()
+    public function votes()
     {
-        return $this->role === 'admin';
-    }
-
-    public function isGuru()
-    {
-        return $this->role === 'guru';
-    }
-
-    public function isBendahara()
-    {
-        return $this->role === 'bendahara';
-    }
-
-    public function isSiswa()
-    {
-        return $this->role === 'siswa';
+        return $this->hasMany(Vote::class);
     }
 }
-

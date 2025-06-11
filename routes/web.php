@@ -27,20 +27,25 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 // Dashboard
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
 
-// Anggota Kelas
-Route::get('/students', [StudentController::class, 'index'])->name('students.index');
-
-// Setoran Tabungan
-Route::resource('deposits', DepositController::class)->middleware('auth');  
-
-// Riwayat Transaksi
-Route::get('transactions', [TransactionController::class, 'showhistory'])->name('transactions.index');
-// Form Laporan
-Route::get('/report', [ReportController::class, 'create'])->name('report.create');
-Route::post('/report', [ReportController::class, 'store'])->name('report.store');
-
 Route::get('/admin/panel', [AdminController::class, 'index'])->name('admin.panel');
 Route::post('/admin/store-student', [AdminController::class, 'storeStudent'])->name('admin.storeStudent');
 Route::post('/admin/add-student', [AdminController::class, 'storeStudent'])->name('admin.addStudent');
 Route::get('/admin', [AdminController::class, 'showAdminPage'])->name('admin.page');
 
+Route::middleware(['auth', 'siswa'])->group(function () {
+    Route::get('/siswa/dashboard', function () {
+        return view('siswa.dashboard');
+    });
+});
+
+Route::middleware(['auth', 'guru'])->group(function () {
+    Route::get('/guru/dashboard', function () {
+        return view('guru.dashboard');
+    });
+});
+
+Route::middleware(['auth', 'bendahara'])->group(function () {
+    Route::get('/bendahara/dashboard', function () {
+        return view('bendahara.dashboard');
+    });
+});
