@@ -16,7 +16,7 @@
                 <a href="#fitur" class="hover:text-lime-600">Fitur</a>
                 <a href="#tentang" class="hover:text-lime-600">Tentang</a>
                 <a href="#kontak" class="hover:text-lime-600">Kontak</a>
-                <a href="{{ route('dashboard') }}" class="bg-lime-500 hover:bg-lime-600 text-white px-4 py-2 rounded-md">Masuk</a>
+                <a href="{{ route('login') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Masuk</a>
             </div>
         </div>
     </nav>

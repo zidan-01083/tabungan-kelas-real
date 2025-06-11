@@ -1,58 +1,63 @@
 <?php
 namespace App\Http\Controllers;
-use App\Models\Student;
+
 use App\Models\Deposit;
+use App\Models\Student;
 use Illuminate\Http\Request;
 
 class DepositController extends Controller
 {
-    public function create($id)
+    // Menampilkan daftar setoran tabungan
+    public function index()
     {
-        $student = Student::findOrFail($id);
-        return view('deposits.create', compact('student'));
+        $deposits = Deposit::with('student')->get(); // Ambil data setoran dengan relasi siswa
+        return view('deposits.index', compact('deposits'));
     }
 
-    public function store(Request $request, $id)
+    // Menampilkan form untuk menambah setoran
+    public function create()
+    {
+        $students = Student::all(); // Ambil data siswa untuk dipilih
+        return view('deposits.create', compact('students'));
+    }
+
+    // Menyimpan setoran baru
+    public function store(Request $request)
     {
         $request->validate([
-            'amount' => 'required|numeric|min:1000',
-            'date' => 'required|date'
+            'student_id' => 'required|exists:students,id',
+            'amount' => 'required|numeric',
+            'deposit_time' => 'required|date',
         ]);
 
-        Deposit::create([
-            'student_id' => $id,
-            'amount' => $request->amount,
-            'date' => $request->date
-        ]);
-
-        return redirect()->route('students.index')->with('success', 'Setoran berhasil ditambahkan.');
+        Deposit::create($request->all());
+        return redirect()->route('deposits.index')->with('success', 'Setoran berhasil ditambahkan!');
     }
 
-    public function edit($id)
-{
-    $deposit = Deposit::findOrFail($id);
-    return view('deposits.edit', compact('deposit'));
-}
+    // Menampilkan form edit setoran
+    public function edit(Deposit $deposit)
+    {
+        $students = Student::all();
+        return view('deposits.edit', compact('deposit', 'students'));
+    }
 
-public function update(Request $request, $id)
-{
-    $request->validate([
-        'amount' => 'required|numeric|min:1000',
-        'date' => 'required|date'
-    ]);
+    // Memperbarui setoran yang sudah ada
+    public function update(Request $request, Deposit $deposit)
+    {
+        $request->validate([
+            'student_id' => 'required|exists:students,id',
+            'amount' => 'required|numeric',
+            'deposit_time' => 'required|date',
+        ]);
 
-    $deposit = Deposit::findOrFail($id);
-    $deposit->update($request->only('amount', 'date'));
+        $deposit->update($request->all());
+        return redirect()->route('deposits.index')->with('success', 'Setoran berhasil diperbarui!');
+    }
 
-    return redirect()->route('students.index')->with('success', 'Setoran berhasil diperbarui.');
-}
-
-public function destroy($id)
-{
-    $deposit = Deposit::findOrFail($id);
-    $deposit->delete();
-
-    return redirect()->route('students.index')->with('success', 'Setoran berhasil dihapus.');
-}
-
+    // Menghapus setoran
+    public function destroy(Deposit $deposit)
+    {
+        $deposit->delete();
+        return redirect()->route('deposits.index')->with('success', 'Setoran berhasil dihapus!');
+    }
 }

@@ -1,27 +1,27 @@
-@if($student->deposits->count())
-    <table class="w-full mt-2 text-sm">
+@extends('layouts.app')
+
+@section('content')
+<div class="max-w-4xl mx-auto mt-10">
+    <h2 class="text-2xl font-bold mb-4">Daftar Anggota Kelas</h2>
+    <table class="w-full bg-white rounded shadow">
         <thead>
-            <tr class="bg-gray-200">
-                <th class="p-2">Tanggal</th>
-                <th class="p-2">Jumlah</th>
-                <th class="p-2">Aksi</th>
+            <tr class="bg-gray-200 text-left">
+                <th class="p-3">Nama</th>
+                <th class="p-3">Email</th>
+                <th class="p-3">Role</th>
+                <th class="p-3">Class</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($student->deposits as $deposit)
+            @foreach ($students as $student)
                 <tr class="border-b">
-                    <td class="p-2">{{ $deposit->date }}</td>
-                    <td class="p-2">Rp {{ number_format($deposit->amount, 0, ',', '.') }}</td>
-                    <td class="p-2">
-                        <a href="{{ route('deposit.edit', $deposit->id) }}" class="text-blue-600">Edit</a>
-                        <form action="{{ route('deposit.destroy', $deposit->id) }}" method="POST" class="inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" onclick="return confirm('Hapus setoran ini?')" class="text-red-600 ml-2">Hapus</button>
-                        </form>
-                    </td>
+                    <td class="p-3">{{ $student->name }}</td>
+                    <td class="p-3">{{ $student->email }}</td>
+                    <td class="p-3 capitalize">{{ $student->role }}</td>
+                    <td class="p-3 capitalize">{{ $student->class_name }}</td>
                 </tr>
             @endforeach
         </tbody>
     </table>
-@endif
+</div>
+@endsection

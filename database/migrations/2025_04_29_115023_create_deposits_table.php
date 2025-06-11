@@ -9,13 +9,13 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('deposits', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('student_id')->constrained()->onDelete('cascade');
-            $table->integer('amount');
-            $table->date('date');
+            $table->foreignId('student_id')->constrained()->onDelete('cascade'); // Relasi dengan tabel siswa
+            $table->decimal('amount', 15, 2); // Nominal uang
+            $table->timestamp('deposit_time')->nullable(); // Waktu setoran
             $table->timestamps();
         });
     }
