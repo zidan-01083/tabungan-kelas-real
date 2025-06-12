@@ -3,19 +3,27 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\User;
 
 class Transaksi extends Model
 {
-    protected $fillable = [
-        'user_id',
-        'tipe', // masuk atau keluar
-        'jumlah',
-        'keterangan',
-        'tanggal',
-    ];
+    protected $table = 'transaksi'; // ✅ pastikan nama tabel sesuai dengan database
 
-    public function user()
+    protected $fillable = [
+    'name',
+    'email',
+    'password',
+    'role',
+    'kelas_siswa', // tambahkan ini
+];
+
+
+    /**
+     * Relasi: Transaksi dimiliki oleh satu siswa (user)
+     */
+    public function siswa(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 }
